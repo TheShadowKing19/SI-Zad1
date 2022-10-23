@@ -38,7 +38,7 @@ def wygenerujtabele(n: int) -> list:
     return tablica
 
 
-def generujpotomka(n: int):
+def generujpotomka1(n: int):
     """
 
     Args:
@@ -63,7 +63,25 @@ def generujpotomka(n: int):
     print(do_przeszukania)
 
 
+def generujpotomka(arr: [list], n: int):
+    """
+    Funkcja generuje permutacje podanej tablicy dwuwymiarowej od 0 do n.
+
+    Args:
+        arr: Tablica dwuwymiarowa, dla której generujemy permutacje.
+        n: Granica wygenerowanych permutacji.
+
+    Returns:
+
+    """
+    for i in range(0, n):
+        temp = arr[0] + [i]
+        arr.append(temp)
+    pass
+
+
 if __name__ == '__main__':
-   generujpotomka(4)
+    kolejka = [[0, 1]]
+    generujpotomka(kolejka, 4)
 
 
