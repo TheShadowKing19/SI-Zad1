@@ -1,9 +1,8 @@
 import random
-from tqdm import tqdm
-# Funkcja ma generować taką tablice liczb, by nie było bicia
 
 
-def sprawdzbicie(tablica: list) -> False:
+
+def czyBije(tablica: list) -> False:
     """
     Funkcja sprawdza podaną tablicę na podstawie warunku |i - j| == |arr[i] - arr[j]|
 
@@ -13,10 +12,11 @@ def sprawdzbicie(tablica: list) -> False:
     Returns: False, jeśli nie nastąpiło bicie hetmanów. W przeciwnym razie zwraca True
 
     """
-    for i in tqdm(range(0, len(tablica))):
-        for j in range(i, len(tablica)):
-            if i == j:
-                continue
+    for i in range(0, len(tablica)):
+        for j in range(i+1, len(tablica)):
+            if tablica[i] == tablica[j]:
+                print(f"Bicie!, i = {i + 1} oraz j = {j + 1}")
+                return True
             elif abs(i - j) == abs(tablica[i] - tablica[j]):
                 print(f"Bicie!, i = {i+1} oraz j = {j+1}")
                 return True
@@ -74,14 +74,31 @@ def generujpotomka(arr: [list], n: int):
     Returns:
 
     """
+    temp1 = []
     for i in range(0, n):
-        temp = arr[0] + [i]
-        arr.append(temp)
-    pass
+        temp = arr + [i]
+        # arr.append(temp)
+        temp1.append(temp)
+    return temp1
 
 
 if __name__ == '__main__':
-    kolejka = [[0, 1]]
-    generujpotomka(kolejka, 4)
+    kolejka = []
+    n = int(input("n="))
+    for i in range(0, n):
+        kolejka.append([i])
+    print(kolejka)
+    while len(kolejka) != 0:
+        if len(kolejka[0]) == n:
+            if not czyBije(kolejka[0]):
+                print(f"Znaleziono rozwiązanie: {kolejka[0]}")
+                break
+            else:
+                kolejka.pop(0)
+        else:
+            x = generujpotomka(kolejka[0], n)
+            for i in range(0, len(x)):
+                kolejka.append(x[i])
+            kolejka.pop(0)
 
 
