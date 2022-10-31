@@ -35,7 +35,7 @@ def czyBije(tablica: list) -> False:
     return False
 
 
-def generujpotomka(arr: [list], n: int):
+def generujpotomka(arr: [list], n: int) -> list[list]:
     """
     Funkcja generuje permutacje podanej tablicy dwuwymiarowej od 0 do n. Przykładowo, dla tablicy [0] i n = 4, funkcja
     wygeneruje permutacje: [0, 0], [0, 1], [0, 2], [0, 3].
@@ -54,7 +54,18 @@ def generujpotomka(arr: [list], n: int):
     return temp1
 
 
-def rozwiazNHetmanow(n: int):
+def rozwiazNHetmanow(n: int) -> (int, int, int):
+    """
+    Funkcja służy do uruchomienia rozwiązywania problemu N-hetmanów.
+
+    Args:
+        n: Liczba określająca liczbę hetmanów na planszy oraz rozmiar szachownicy nxn.
+
+    Returns:
+          wygenerowanych (int): Liczba wygenerowanych potomków
+          sprawdzonych (int): Liczba sprawdzonych stanów
+          czas_wykonania (int): Czas wykonania zadania
+    """
     start = timer()
     sprawdzonych = 0
     wygenerowanych = 0
@@ -85,7 +96,18 @@ def rozwiazNHetmanow(n: int):
     # print(f"Czas wykonania: {end - start} s")
 
 
-def rozwiazNHetmanow_kolejka(n: int):
+def rozwiazNHetmanow_kolejka(n: int) -> (int, int, int):
+    """
+    Funkcja służąca do uruchomienia rozwiązywania problemu N-hetmanów. Funkcja ta korzysta z Kolejek.
+
+    Args:
+        n: Liczba określająca liczbę hetmanów na planszy oraz rozmiar szachownicy nxn.
+
+    Returns:
+          wygenerowanych (int): Liczba wygenerowanych potomków
+          sprawdzonych (int): Liczba sprawdzonych stanów
+          czas_wykonania (int): Czas wykonania zadania
+    """
     start = timer()
     sprawdzonych = 0
     wygenerowanych = 0
