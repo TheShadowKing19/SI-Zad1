@@ -1,104 +1,120 @@
-import random
-
+from timeit import default_timer as timer
+import pandas as pd
+import numpy as np
+from IPython.display import display
+import matplotlib.pyplot as plt
 
 
 def czyBije(tablica: list) -> False:
     """
-    Funkcja sprawdza podaną tablicę na podstawie warunku |i - j| == |arr[i] - arr[j]|
+    Funkcja sprawdza podaną tablicę na podstawie warunku |i - j| == |arr[i] - arr[j]|, gdzie:
+    i - indeks pierwszego sprawdzanego elementu
+    j - indeks drugiego sprawdzanego elementu
+    arr[i] - wartość pierwszego elementu
+    arr[j] - wartość drugiego elementu
+
+    Jeśli wartości po obu stronach równania się zgadzają, następuję bicię hetmanów. Jeśli są różne, nie ma bicia.
 
     Args:
         tablica: Lista do sprawdzenia zawierająca współrzędne hetmanów.
 
-    Returns: False, jeśli nie nastąpiło bicie hetmanów. W przeciwnym razie zwraca True
+    Returns:
+        False, jeśli nie nastąpiło bicie hetmanów. W przeciwnym razie zwraca True
 
     """
     for i in range(0, len(tablica)):
-        for j in range(i+1, len(tablica)):
+        for j in range(i + 1, len(tablica)):
             if tablica[i] == tablica[j]:
-                print(f"Bicie!, i = {i + 1} oraz j = {j + 1}")
+                # print(f"Bicie!, i = {i + 1} oraz j = {j + 1}")
                 return True
             elif abs(i - j) == abs(tablica[i] - tablica[j]):
-                print(f"Bicie!, i = {i+1} oraz j = {j+1}")
+                # print(f"Bicie!, i = {i+1} oraz j = {j+1}")
                 return True
     print(f"Brak bić dla tablicy {tablica}")
     return False
 
 
-def wygenerujtabele(n: int) -> list:
-    """
-    Funkcja generuje tabele n liczb losowych od (1,n) bez powtórzeń.
-
-    Args:
-        n: Ilość liczb do wygenerowania oraz max
-
-    Returns:
-        Lista losowo wygenerowanych liczb od (1,n) bez powtórzeń.
-    """
-    tablica = random.sample(range(1, n+1), n)
-    return tablica
-
-
-def generujpotomka1(n: int):
-    """
-
-    Args:
-        ojciec:
-        n:
-
-    Returns:
-
-    """
-
-    do_przeszukania = []
-    do_przeszukania.append([])
-    temp = []
-    for i in range(0, n):
-        do_przeszukania.append([i])
-        temp = []
-        temp.append(i)
-        for j in range(0, n):
-            temp.append(j)
-            do_przeszukania.append(temp)
-            temp = temp[:len(temp)-1]
-    print(do_przeszukania)
-
-
 def generujpotomka(arr: [list], n: int):
     """
-    Funkcja generuje permutacje podanej tablicy dwuwymiarowej od 0 do n.
+    Funkcja generuje permutacje podanej tablicy dwuwymiarowej od 0 do n. Przykładowo, dla tablicy [0] i n = 4, funkcja
+    wygeneruje permutacje: [0, 0], [0, 1], [0, 2], [0, 3].
 
     Args:
         arr: Tablica dwuwymiarowa, dla której generujemy permutacje.
         n: Granica wygenerowanych permutacji.
 
     Returns:
-
+        Dwuwymiarowa lista permutacji.
     """
     temp1 = []
     for i in range(0, n):
         temp = arr + [i]
-        # arr.append(temp)
         temp1.append(temp)
     return temp1
 
 
-if __name__ == '__main__':
+def rozwiazNHetmanow(n: int):
+    start = timer()
+    sprawdzonych = 0
+    wygenerowanych = 0
     kolejka = []
-    n = int(input("n="))
+    n = n
     for i in range(0, n):
         kolejka.append([i])
-    print(kolejka)
     while len(kolejka) != 0:
         if len(kolejka[0]) == n:
             if not czyBije(kolejka[0]):
                 print(f"Znaleziono rozwiązanie: {kolejka[0]}")
+                sprawdzonych += 1
                 break
             else:
                 kolejka.pop(0)
+                sprawdzonych += 1
         else:
             x = generujpotomka(kolejka[0], n)
+            wygenerowanych += n
             for i in range(0, len(x)):
                 kolejka.append(x[i])
             kolejka.pop(0)
+    end = timer()
+    czas_wykonania = end - start
+    return wygenerowanych, sprawdzonych, czas_wykonania
+    # print(f"Wygenerowanych potomków: {wygenerowanych}")
+    # print(f"Sprawdzonych stanów: {sprawdzonych}")
+    # print(f"Czas wykonania: {end - start} s")
 
+
+if __name__ == '__main__':
+    n4_wygenerowanych, n4_sprawdzonych, n4_czas = rozwiazNHetmanow(4)
+    print()
+    n5_wygenerowanych, n5_sprawdzonych, n5_czas = rozwiazNHetmanow(5)
+    print()
+    n6_wygenerowanych, n6_sprawdzonych, n6_czas = rozwiazNHetmanow(6)
+    print()
+    n7_wygenerowanych, n7_sprawdzonych, n7_czas = rozwiazNHetmanow(7)
+    wygenerowanych_wyniki = [n4_wygenerowanych, n5_wygenerowanych, n6_wygenerowanych, n7_wygenerowanych]
+    sprawdzonych_wyniki = [n4_sprawdzonych, n5_sprawdzonych, n6_sprawdzonych, n7_sprawdzonych]
+    czas_wyniki = [n4_czas, n5_czas, n6_czas, n7_czas]
+    n = [4, 5, 6, 7]
+    wyniki = np.array([(n4_wygenerowanych, n4_sprawdzonych, n4_czas),
+                       (n5_wygenerowanych, n5_sprawdzonych, n5_czas),
+                       (n6_wygenerowanych, n6_sprawdzonych, n6_czas),
+                       (n7_wygenerowanych, n7_sprawdzonych, n7_czas)])
+    df = pd.DataFrame(wyniki,
+                      columns=['Wygenerowanych potomków',
+                               'Sprawdzonych stanów',
+                               'Czas wykonania [s]'],
+                      index=['n = 4', 'n = 5', 'n = 6', 'n = 7']
+                      )
+    display(df)
+
+    xticks = np.arange(4, 7+1)
+    plt.plot(n, wygenerowanych_wyniki)
+    plt.plot(n, sprawdzonych_wyniki)
+    plt.plot(n, czas_wyniki)
+    plt.legend(['Wygenerowanych potomków', 'Sprawdzonych stanów', 'Czas wykonania [s]'])
+    plt.title("n-hetmanów BFS")
+    plt.xlabel("n (x10^6)")
+    plt.xticks(xticks)
+    plt.show()
 
