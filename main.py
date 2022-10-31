@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from IPython.display import display
 import matplotlib.pyplot as plt
+from queue import Queue
 
 
 def czyBije(tablica: list) -> False:
@@ -84,14 +85,46 @@ def rozwiazNHetmanow(n: int):
     # print(f"Czas wykonania: {end - start} s")
 
 
+def rozwiazNHetmanow_kolejka(n: int):
+    start = timer()
+    sprawdzonych = 0
+    wygenerowanych = 0
+    kolejka = Queue(maxsize=0)
+    n = n
+    for i in range(0, n):
+        kolejka.put([i])
+    while not kolejka.empty():
+        if len(kolejka.queue[0]) == n:
+            if not czyBije(kolejka.queue[0]):
+                print(f"Znaleziono rozwiązanie: {kolejka.queue[0]}")
+                sprawdzonych += 1
+                break
+            else:
+                kolejka.get()
+                sprawdzonych += 1
+        else:
+            x = generujpotomka(kolejka.get(), n)
+            wygenerowanych += n
+            for i in range(0, len(x)):
+                kolejka.put(x[i])
+
+    end = timer()
+    czas_wykonania = end - start
+    return wygenerowanych, sprawdzonych, czas_wykonania
+    # print(f"Wygenerowanych potomków: {wygenerowanych}")
+    # print(f"Sprawdzonych stanów: {sprawdzonych}")
+    # print(f"Czas wykonania: {czas_wykonania} s")
+
+
 if __name__ == '__main__':
-    n4_wygenerowanych, n4_sprawdzonych, n4_czas = rozwiazNHetmanow(4)
+    n4_wygenerowanych, n4_sprawdzonych, n4_czas = rozwiazNHetmanow_kolejka(4)
     print()
-    n5_wygenerowanych, n5_sprawdzonych, n5_czas = rozwiazNHetmanow(5)
+    n5_wygenerowanych, n5_sprawdzonych, n5_czas = rozwiazNHetmanow_kolejka(5)
     print()
-    n6_wygenerowanych, n6_sprawdzonych, n6_czas = rozwiazNHetmanow(6)
+    n6_wygenerowanych, n6_sprawdzonych, n6_czas = rozwiazNHetmanow_kolejka(6)
     print()
-    n7_wygenerowanych, n7_sprawdzonych, n7_czas = rozwiazNHetmanow(7)
+    n7_wygenerowanych, n7_sprawdzonych, n7_czas = rozwiazNHetmanow_kolejka(7)
+
     wygenerowanych_wyniki = [n4_wygenerowanych, n5_wygenerowanych, n6_wygenerowanych, n7_wygenerowanych]
     sprawdzonych_wyniki = [n4_sprawdzonych, n5_sprawdzonych, n6_sprawdzonych, n7_sprawdzonych]
     czas_wyniki = [n4_czas, n5_czas, n6_czas, n7_czas]
