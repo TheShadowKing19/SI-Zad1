@@ -171,5 +171,6 @@ if __name__ == '__main__':
     plt.title("n-hetmanów BFS")
     plt.xlabel("n (x10^6)")
     plt.xticks(xticks)
+    plt.savefig("Wykres")
     plt.show()
 
